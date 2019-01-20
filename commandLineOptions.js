@@ -71,7 +71,11 @@ module.exports = {
 
     usageSections: [{
             header: 'GA Data Downloader',
-            content: 'Downloads unsampled GA data day by day for given date range to CSV.'
+            content: [
+                'Downloads unsampled GA data day by day for given date range to CSV.',
+                '',
+                '(created by {blue &activate}. {underline http://www.activate.cz})'
+            ]
         },
         {
             header: 'Example',

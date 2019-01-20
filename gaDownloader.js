@@ -45,7 +45,7 @@ async function downloadAllDays(options) {
     let workDate = moment(options.dateFrom)
     while (workDate.isSameOrBefore(options.dateTo)) {
         let out = await downloadOneDay(workDate, options)
-        // debug(out)
+        //debug(out)
         workDate.add(1, "day")
     }
 }
@@ -59,6 +59,7 @@ function downloadOneDay(date, options) {
                 ids: 'ga:' + options.profileId,
                 'start-date': date.format('YYYY-MM-DD'),
                 'end-date': date.format('YYYY-MM-DD'),
+                'max-results': 10000,
                 metrics: options.metrics,
                 dimensions: options.dimensions
             },options).then((out) => {
@@ -71,42 +72,46 @@ function downloadOneDay(date, options) {
 
 function getAndPrintData(config,options) {
     return new Promise((resolve, reject) => {
-        google.analytics('v3').data.ga.get(
-            config,
-            (err, result) => {
-                //console.log(err, result)
+        getAndPrintDataRacursively(config, options, resolve, reject)
+    })
+}
 
-                if (err) {
-                    console.log(err)
+function getAndPrintDataRacursively(config, options, resolve, reject){
+    google.analytics('v3').data.ga.get(
+        config,
+        (err, result) => {
+            //console.log(err, result)
+
+            if (err) {
+                console.log(err)
+            }
+
+            if (result.data.rows) {
+                let sampledData = result.data.containsSampledData;
+                let totalResult = result.data.totalResults;
+                let itemPerPage = result.data.itemsPerPage;
+                let startIndex = result.data.query['start-index']
+
+                if (sampledData) {
+                    debug("[Warning] Sampled data")
                 }
 
-                if (result.data.rows) {
-                    let sampledData = result.data.containsSampledData;
-                    let totalResult = result.data.totalResults;
-                    let itemPerPage = result.data.itemsPerPage;
-                    let startIndex = result.data.query['start-index']
+                debug("Downloaded  %d / %d", result.data.rows.length + startIndex - 1, totalResult)
+                printData(config['start-date'],result.data, options.format)
 
-                    if (sampledData) {
-                        debug("[Warning] Sampled data")
-                    }
-
-                    debug("Downloaded  %d / %d", result.data.rows.length + startIndex - 1, totalResult)
-                    printData(config['start-date'],result.data, options.format)
-
-                    if (result.data.nextLink) {
-                        let nextConfig = JSON.parse(JSON.stringify(config));
-                        nextConfig['auth'] = jwt
-                        nextConfig['start-index'] = startIndex + itemPerPage
-                        getAndPrintData(nextConfig,options)
-                    } else {
-                        resolve({
-                            status: "ok"
-                        })
-                    }
+                if (result.data.nextLink) {
+                    let nextConfig = JSON.parse(JSON.stringify(config));
+                    nextConfig['auth'] = jwt
+                    nextConfig['start-index'] = startIndex + itemPerPage
+                    getAndPrintDataRacursively(nextConfig,options, resolve, reject)
+                } else {
+                    resolve({
+                        status: "ok"
+                    })
                 }
             }
-        )
-    })
+        }
+    )    
 }
 
 //main code
