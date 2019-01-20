@@ -159,7 +159,7 @@ function transformRow(headers, row, printFormat) {
             } else if (headers[i].type === "Numeric") {
                 out.push(row[i])
             } else if (headers[i].type === "String") {
-                out.push(`"${row[i]}"`)
+                out.push(`"${row[i].replace(/"/g,"''")}"`)
             }
         }
         return out.join(',')
