@@ -51,5 +51,11 @@ bq load --autodetect  myGaDataset.gaExport out.csv
 ```
 
 ## Todo
+
 - filtry, segmenty
 - JSON format
+
+
+## Nice to have
+
+- vytvo5it balíček instalovatelný jako `npm install -g  ga-downloader` 
