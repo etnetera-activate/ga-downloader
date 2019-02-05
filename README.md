@@ -10,20 +10,25 @@ Je třeba:
  - tento service account přidaný do GA, které chceme tahat.
 
 ## Instalace
+Instaluje se jako globální modul. 
 
 ```
-git clone https://github.com/etnetera-activate/ga-downloader.git
-cd ga-downloader
-npm install
+npm install -g https://github.com/etnetera-activate/ga-downloader.git
 ```
 
-Následně si připravte JSON file s credentials service accountu. Buďto je nahrajte do adresáře jako `auth.json` a nebo na ně musíte odkazovat
+nebo dle vašeho nastavení
+
+```
+sudo npm install -g https://github.com/etnetera-activate/ga-downloader.git
+```
+
+Následně si připravte JSON file s credentials service accountu. Buďto je nahrajte do adresáře jako `auth.json` a nebo na ně musíte odkazovat.
 
 ## Použití a funkce
 
 Pro nápovědu stačí:
 ```
-node gaDownloader.js 
+gadownloader --help
 ```
 
 Povinné parametry:
@@ -39,23 +44,27 @@ Další parametry:
 - `--authFile` je cesta k JSON souboru s credentials. Default je `./auth.json`
 - `--format` je formát výstupu. Zatím jen CSV
 
-Pokud chcete na `stderr` nastavte env variable DEBUG na activate*
 
 ## Příklad použití
 
 ```
-DEBUG=activate* node gaDownloader.js -p 26893096 -f "2019-01-01" -t 2019-01-05 -m "ga:sessions" -d "ga:source,ga:medium,ga:keyword" > out.csv
+gadownloader -p 26893096 -f "2019-01-01" -t 2019-01-05 -m "ga:sessions" -d "ga:source,ga:medium,ga:keyword" > out.csv
 
 bq load --autodetect  myGaDataset.gaExport out.csv
 
 ```
 
+nebo s odkazem na authfile.
+
+```
+gadownloader -p 26893096 -f "2019-01-01" -m "ga:sessions" -d "ga:source,ga:medium,ga:keyword" -a "/home/someone/auth.json" > out.csv
+
+bq load --autodetect  myGaDataset.gaExport out.csv
+
+```
+
+
 ## Todo
 
 - filtry, segmenty
 - JSON format
-
-
-## Nice to have
-
-- vytvo5it balíček instalovatelný jako `npm install -g  ga-downloader` 
