@@ -2,10 +2,14 @@
   "name": "gadownloader",
   "version": "0.0.1",
   "description": "Downloads GA data per one day",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "gadownloader": "./bin/gaDownloader.js"
+  },
+  "preferGlobal": true,
   "author": "jiri.stepan@activate.cz",
   "license": "ISC",
   "dependencies": {
