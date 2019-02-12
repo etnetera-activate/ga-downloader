@@ -40,6 +40,9 @@ Povinné parametry:
 Další parametry:
 
 - `--dimensions` ve formátu ala metrics. Pozor - nepoužívejte dimenzi `ga:date`, tu dopňuje sám program.
+- `--filters` je string pro filtr dle API GA.
+- `--segment` je string pro segment dle API GA.
+
 - `--dateTo` ve formáty YYYY-MM-DD. pokud je zadáno tahá se po dnech od *dateFrom* do *dateTo*. Pokud není zadáno, tahá se jen jeden den odpovídající *dateFrom*
 - `--authFile` je cesta k JSON souboru s credentials. Default je `./auth.json`
 - `--format` je formát výstupu. Zatím jen CSV
